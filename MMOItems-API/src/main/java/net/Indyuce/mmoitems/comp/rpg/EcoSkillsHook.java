@@ -54,17 +54,20 @@ public class EcoSkillsHook implements RPGHandler , Listener {
 
                 for (Stat stat:Stats.values()){
                     String str=stat.getKey().toString().replace(":","_").toUpperCase();
+                    System.out.println("注册"+str);
                     ItemStat mmstat=new DoubleStat(str, Material.BOOK,
-                            "eco数值之"+str,
+                            "eco数值之"+stat.getName(),
                             new String[]{"键名:"+str},
                             new String[]{"!miscellaneous", "!block", "all"});
                     map_stats.put(mmstat,stat);
                     MMOItems.plugin.getStats().register(mmstat);
                 }
+                CustomStats.update(eSkills);
                 for (CustomStat stat:CustomStats.values()){
                     String str=stat.getKey().toString().replace(":","_").toUpperCase();
+                    System.out.println("注册"+str);
                     ItemStat mmstat=new DoubleStat(str, Material.BOOK,
-                            "eco数值之"+str,
+                            "eco数值之"+stat.getName(),
                             new String[]{"键名:"+str},
                             new String[]{"!miscellaneous", "!block", "all"});
                     map_stats.put(mmstat,stat);

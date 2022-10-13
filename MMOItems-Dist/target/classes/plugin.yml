@@ -3,8 +3,8 @@ version: 6.8.2-SNAPSHOT
 main: net.Indyuce.mmoitems.MMOItems
 author: Indyuce
 description: A great item solution for your RPG server!!
-depend: [MythicLib]
-softdepend: [EcoSkills,WorldGuard,Residence,BossShopPro,SkillAPI,SkillsPro,MMOCore,MythicMobs,MMOInventory,PlaceholderAPI,Vault,Denizen]
+depend: [MythicLib,EcoSkills]
+softdepend: [WorldGuard,Residence,BossShopPro,SkillAPI,SkillsPro,MMOCore,MythicMobs,MMOInventory,PlaceholderAPI,Vault,Denizen]
 api-version: 1.13
 commands:
     mmoitems:
