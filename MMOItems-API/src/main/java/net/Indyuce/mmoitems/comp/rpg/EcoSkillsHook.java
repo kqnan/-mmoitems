@@ -35,12 +35,14 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import javax.naming.Name;
+import java.util.Set;
 
 public class EcoSkillsHook implements RPGHandler , Listener {
+    private static boolean isload=false;
     EcoSkillsPlugin eSkills;
     private NamespacedKey manaKey=new NamespacedKey("mmoitems","mana");
     private NamespacedKey magicdamagekey=new NamespacedKey("mmoitems","magic_damage");
-    private NamespacedKey staminakey=new NamespacedKey("mmoitems","saturation");
+
     private static final ItemStat mana = new DoubleStat("ECO_MANA", Material.BOOK,
             "eco法力",
             new String[]{"eco的法力属性，键值:mana"},
@@ -52,7 +54,7 @@ public class EcoSkillsHook implements RPGHandler , Listener {
     public EcoSkillsHook(){
 
         eSkills = (EcoSkillsPlugin) Bukkit.getPluginManager().getPlugin("EcoSkills");
-
+       
         // Register wisdom for the max mana stat
         MMOItems.plugin.getStats().register(mana);
         MMOItems.plugin.getStats().register(magic_damage);
