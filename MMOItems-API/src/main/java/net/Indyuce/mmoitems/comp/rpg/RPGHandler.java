@@ -29,6 +29,7 @@ public interface RPGHandler {
     void refreshStats(PlayerData data);
 
     enum PluginEnum {
+        ECOSKILLS("EcoSkills",EcoSkillsHook.class),
         MMOCORE("MMOCore", MMOCoreHook.class),
         HEROES("Heroes", HeroesHook.class),
         PROSKILLAPI("ProSkillAPI", ProSkillAPIHook.class),

@@ -118,7 +118,13 @@
     the first wins when multiple classpaths match
     -->
     <dependencies>
-
+        <dependency>
+            <groupId>com.willfp</groupId>
+            <artifactId>eco</artifactId>
+            <version>6.38.2</version>
+            <scope>system</scope>
+            <systemPath>E:/mmoitems/lib/eco-6.38.2-all.jar</systemPath>
+        </dependency>
         <!-- Spigot API -->
         <dependency>
             <groupId>org.spigotmc</groupId>
@@ -126,7 +132,13 @@
             <version>1.18-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
-
+        <dependency>
+            <groupId>com.willfp</groupId>
+            <artifactId>EcoSkills</artifactId>
+            <version>1.66.0</version>
+            <scope>system</scope>
+            <systemPath>E:/mmoitems/lib/EcoSkills v1.66.0.jar</systemPath>
+        </dependency>
         <!-- https://mvnrepository.com/artifact/org.apache.maven.plugins/maven-clean-plugin -->
         <dependency>
             <groupId>org.apache.maven.plugins</groupId>

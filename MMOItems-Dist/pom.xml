@@ -98,7 +98,20 @@
     </build>
 
     <dependencies>
-
+        <dependency>
+            <groupId>com.willfp</groupId>
+            <artifactId>eco</artifactId>
+            <version>6.38.2</version>
+            <scope>system</scope>
+            <systemPath>E:/mmoitems/lib/eco-6.38.2-all.jar</systemPath>
+        </dependency>
+        <dependency>
+            <groupId>com.willfp</groupId>
+            <artifactId>EcoSkills</artifactId>
+            <version>1.66.0</version>
+            <scope>system</scope>
+            <systemPath>E:/mmoitems/lib/EcoSkills v1.66.0.jar</systemPath>
+        </dependency>
         <!-- Spigot API -->
         <dependency>
             <groupId>org.spigotmc</groupId>
