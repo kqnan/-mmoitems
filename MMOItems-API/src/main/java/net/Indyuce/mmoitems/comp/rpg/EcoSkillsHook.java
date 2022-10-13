@@ -2,10 +2,18 @@ package net.Indyuce.mmoitems.comp.rpg;
 
 import com.archyx.aureliumskills.AureliumSkills;
 import com.archyx.aureliumskills.skills.Skills;
+import com.willfp.eco.core.Eco;
+import com.willfp.eco.core.EcoPlugin;
+import com.willfp.eco.core.data.PlayerProfile;
 import com.willfp.ecoskills.EcoSkillsPlugin;
 import com.willfp.ecoskills.api.EcoSkillsAPI;
 import com.willfp.ecoskills.api.modifier.ModifierOperation;
 import com.willfp.ecoskills.api.modifier.PlayerStatModifier;
+import com.willfp.ecoskills.libreforge.PointCostHandler;
+import com.willfp.ecoskills.libreforge.PointsUtils;
+import com.willfp.ecoskills.libreforge.effects.effects.EffectGivePoints;
+import com.willfp.ecoskills.libreforge.events.PointsChangeEvent;
+import com.willfp.ecoskills.libreforge.triggers.TriggerData;
 import com.willfp.ecoskills.stats.CustomStat;
 import com.willfp.ecoskills.stats.CustomStats;
 import com.willfp.ecoskills.stats.Stat;
@@ -16,6 +24,7 @@ import net.Indyuce.mmoitems.api.player.EmptyRPGPlayer;
 import net.Indyuce.mmoitems.api.player.PlayerData;
 import net.Indyuce.mmoitems.api.player.RPGPlayer;
 import net.Indyuce.mmoitems.stat.Abilities;
+import net.Indyuce.mmoitems.stat.data.AbilityData;
 import net.Indyuce.mmoitems.stat.type.DoubleStat;
 import net.Indyuce.mmoitems.stat.type.ItemStat;
 import org.bukkit.Bukkit;
@@ -54,12 +63,22 @@ public class EcoSkillsHook implements RPGHandler , Listener {
     @Override
     public RPGPlayer getInfo(PlayerData data) {
 
-        RPGPlayer rpgPlayer= new EcoSkillsPlayer(data);
-        return rpgPlayer;
+        return  new EcoSkillsPlayer(data);
     }
-
+    //修正技能伤害
+    @EventHandler
+    public void onSkillCast(PlayerCastSkillEvent event){
+        if(event.getCast() instanceof AbilityData abilityData){
+            if(abilityData.getModifier("damage")!=0){
+                double level=EcoSkillsAPI.getInstance().getStatLevel(event.getPlayer(),getCustomState(new NamespacedKey("ecoskills","magic_damage")))
+                ;
+                abilityData.setModifier("damage",abilityData.getModifier("damage")*(1+(level/200)));
+            }
+        }
+    }
     CustomStat getCustomState(NamespacedKey key){
         for (CustomStat stat: CustomStats.values()){
+
 
             if(stat.getKey().equals(key)){
                 return stat;
@@ -92,7 +111,10 @@ public class EcoSkillsHook implements RPGHandler , Listener {
         public EcoSkillsPlayer(PlayerData playerData) {
             super(playerData);
             player=playerData.getPlayer();
+
         }
+
+
 
         @Override
         public int getLevel() {
@@ -104,24 +126,19 @@ public class EcoSkillsHook implements RPGHandler , Listener {
             return "";
         }
 
-
         @Override
         public double getMana() {
+            return PointsUtils.getPoints(player,"g_mana");
         }
 
         @Override
         public double getStamina() {
-            CustomStat stat=getCustomState(new NamespacedKey("ecoskills","saturation"));
-            if(stat==null)return 0;
-            return EcoSkillsAPI.getInstance().getStatLevel(player,stat);
+            return getPlayer().getFoodLevel();
         }
 
         @Override
         public void setMana(double value) {
-            CustomStat stat=getCustomState(new NamespacedKey("ecoskills","mana"));
-            if(stat==null)return;
-            PlayerStatModifier mana_modifier=new PlayerStatModifier(manaKey,stat,(int)value);
-            EcoSkillsAPI.getInstance().addStatModifier(player,mana_modifier);
+            PointsUtils.setPoints(player,"g_mana",value);
         }
 
         @Override
@@ -129,5 +146,6 @@ public class EcoSkillsHook implements RPGHandler , Listener {
 
         }
     }
+
 
 }
