@@ -41,7 +41,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class EcoSkillsHook implements RPGHandler , Listener {
-    private static boolean isload=false;
+
 
     private HashMap<ItemStat,Stat> map_stats=new HashMap<>();
     EcoSkillsPlugin eSkills;
@@ -50,10 +50,10 @@ public class EcoSkillsHook implements RPGHandler , Listener {
 
             eSkills = (EcoSkillsPlugin) Bukkit.getPluginManager().getPlugin("EcoSkills");
 
-            // Register wisdom for the max mana stat
-            if(!isload){
+   
+
                 for (Stat stat:Stats.values()){
-                    String str=stat.getKey().toString().replace(":","");
+                    String str=stat.getKey().toString().replace(":","_").toUpperCase();
                     ItemStat mmstat=new DoubleStat(str, Material.BOOK,
                             "eco数值之"+str,
                             new String[]{"键名:"+str},
@@ -62,7 +62,7 @@ public class EcoSkillsHook implements RPGHandler , Listener {
                     MMOItems.plugin.getStats().register(mmstat);
                 }
                 for (CustomStat stat:CustomStats.values()){
-                    String str=stat.getKey().toString().replace(":","").toUpperCase();
+                    String str=stat.getKey().toString().replace(":","_").toUpperCase();
                     ItemStat mmstat=new DoubleStat(str, Material.BOOK,
                             "eco数值之"+str,
                             new String[]{"键名:"+str},
@@ -70,8 +70,7 @@ public class EcoSkillsHook implements RPGHandler , Listener {
                     map_stats.put(mmstat,stat);
                     MMOItems.plugin.getStats().register(mmstat);
                 }
-                isload=true;
-            }
+
 
 
     }
@@ -107,7 +106,7 @@ public class EcoSkillsHook implements RPGHandler , Listener {
         for (Map.Entry<ItemStat,Stat> entry:map_stats.entrySet()){
             ItemStat itemStat=entry.getKey();
             Stat stat=entry.getValue();
-            PlayerStatModifier modifier=new PlayerStatModifier(new NamespacedKey("mmoitems",itemStat.getId().replace(":","")),stat,(int)data.getStats().getStat(itemStat));
+            PlayerStatModifier modifier=new PlayerStatModifier(new NamespacedKey("mmoitems",itemStat.getId().replace(":","").toLowerCase()),stat,(int)data.getStats().getStat(itemStat));
             EcoSkillsAPI.getInstance().addStatModifier(data.getPlayer(),modifier);
         }
     }
