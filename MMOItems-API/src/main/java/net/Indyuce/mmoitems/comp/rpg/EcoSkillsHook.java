@@ -35,27 +35,46 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 
 import javax.naming.Name;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 
 public class EcoSkillsHook implements RPGHandler , Listener {
+
+
+    private HashMap<ItemStat,Stat> map_stats=new HashMap<>();
     EcoSkillsPlugin eSkills;
-    private NamespacedKey manaKey=new NamespacedKey("mmoitems","mana");
-    private NamespacedKey magicdamagekey=new NamespacedKey("mmoitems","magic_damage");
-    private NamespacedKey staminakey=new NamespacedKey("mmoitems","saturation");
-    private static final ItemStat mana = new DoubleStat("ECO_MANA", Material.BOOK,
-            "eco法力",
-            new String[]{"eco的法力属性，键值:mana"},
-            new String[]{"!miscellaneous", "!block", "all"});
-    private static final ItemStat magic_damage = new DoubleStat("ECO_MAGIC_DAMAGE", Material.BOOK,
-            "eco魔法伤害",
-            new String[]{"eco的魔法伤害属性，键值:magic_damage"},
-            new String[]{"!miscellaneous", "!block", "all"});
+
     public EcoSkillsHook(){
 
-        eSkills = (EcoSkillsPlugin) Bukkit.getPluginManager().getPlugin("EcoSkills");
+            eSkills = (EcoSkillsPlugin) Bukkit.getPluginManager().getPlugin("EcoSkills");
 
-        // Register wisdom for the max mana stat
-        MMOItems.plugin.getStats().register(mana);
-        MMOItems.plugin.getStats().register(magic_damage);
+   
+
+                for (Stat stat:Stats.values()){
+                    String str=stat.getKey().toString().replace(":","_").toUpperCase();
+                    System.out.println("注册"+str);
+                    ItemStat mmstat=new DoubleStat(str, Material.BOOK,
+                            "eco数值之"+stat.getName(),
+                            new String[]{"键名:"+str},
+                            new String[]{"!miscellaneous", "!block", "all"});
+                    map_stats.put(mmstat,stat);
+                    MMOItems.plugin.getStats().register(mmstat);
+                }
+                CustomStats.update(eSkills);
+                for (CustomStat stat:CustomStats.values()){
+                    String str=stat.getKey().toString().replace(":","_").toUpperCase();
+                    System.out.println("注册"+str);
+                    ItemStat mmstat=new DoubleStat(str, Material.BOOK,
+                            "eco数值之"+stat.getName(),
+                            new String[]{"键名:"+str},
+                            new String[]{"!miscellaneous", "!block", "all"});
+                    map_stats.put(mmstat,stat);
+                    MMOItems.plugin.getStats().register(mmstat);
+                }
+
+
 
     }
 
@@ -77,9 +96,7 @@ public class EcoSkillsHook implements RPGHandler , Listener {
         }
     }
     CustomStat getCustomState(NamespacedKey key){
-        for (CustomStat stat: CustomStats.values()){
-
-
+        for(CustomStat stat:CustomStats.values()){
             if(stat.getKey().equals(key)){
                 return stat;
             }
@@ -89,21 +106,12 @@ public class EcoSkillsHook implements RPGHandler , Listener {
 
     @Override
     public void refreshStats(PlayerData data) {
-
-        CustomStat mana_stat=getCustomState(new NamespacedKey("ecoskills","mana"));
-        CustomStat magicedamage_stat=getCustomState(new NamespacedKey("ecoskills","magic_damage"));
-
-        if(mana_stat!=null){
-
-            PlayerStatModifier mana_modifier=new PlayerStatModifier(manaKey,mana_stat,(int)data.getStats().getStat(mana));
-            EcoSkillsAPI.getInstance().addStatModifier(data.getPlayer(),mana_modifier);
+        for (Map.Entry<ItemStat,Stat> entry:map_stats.entrySet()){
+            ItemStat itemStat=entry.getKey();
+            Stat stat=entry.getValue();
+            PlayerStatModifier modifier=new PlayerStatModifier(new NamespacedKey("mmoitems",itemStat.getId().replace(":","").toLowerCase()),stat,(int)data.getStats().getStat(itemStat));
+            EcoSkillsAPI.getInstance().addStatModifier(data.getPlayer(),modifier);
         }
-        if(magicedamage_stat!=null){
-
-            PlayerStatModifier magic_damage_modifier=new PlayerStatModifier(magicdamagekey, magicedamage_stat,(int)data.getStats().getStat(magic_damage));
-            EcoSkillsAPI.getInstance().addStatModifier(data.getPlayer(),magic_damage_modifier);
-        }
-
     }
     public class EcoSkillsPlayer extends RPGPlayer {
 
