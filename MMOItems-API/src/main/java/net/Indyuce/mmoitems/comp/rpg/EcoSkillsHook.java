@@ -88,10 +88,14 @@ public class EcoSkillsHook implements RPGHandler , Listener {
     @EventHandler
     public void onSkillCast(PlayerCastSkillEvent event){
         if(event.getCast() instanceof AbilityData abilityData){
-            if(abilityData.getModifier("damage")!=0){
-                double level=EcoSkillsAPI.getInstance().getStatLevel(event.getPlayer(),getCustomState(new NamespacedKey("ecoskills","magic_damage")))
-                ;
-                abilityData.setModifier("damage",abilityData.getModifier("damage")*(1+(level/200)));
+            try{
+                if(abilityData.getModifier("damage")!=0){
+                    double level=EcoSkillsAPI.getInstance().getStatLevel(event.getPlayer(),getCustomState(new NamespacedKey("ecoskills","magic_damage")))
+                            ;
+                    abilityData.setModifier("damage",abilityData.getModifier("damage")*(1+(level/200)));
+                }
+            }catch (Exception e){
+
             }
         }
     }
